@@ -1,4 +1,3 @@
-
 **Advanced Calculator & Data Visualization Tool**
 
 A modern, all-in-one web application for scientific computation and interactive data visualization — built with pure HTML5, CSS3, and JavaScript.
