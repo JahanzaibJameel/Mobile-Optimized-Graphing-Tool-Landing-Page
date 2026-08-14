@@ -1,4 +1,3 @@
-# SuperGraph Pro 2026
 
 **Advanced Calculator & Data Visualization Tool**
 
