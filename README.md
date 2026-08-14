@@ -82,7 +82,6 @@ No installation or build process is required — simply open the HTML file in an
 
 ## 🚀 Demo
 
-You can run the application immediately by opening the `index.html` file in your browser.
 
 > **Live Demo:** Add your deployed application URL here when available.
 
