@@ -75,7 +75,6 @@ No installation or build process is required — simply open the HTML file in an
 * Cross-browser compatibility
 * No build tools or frameworks
 * Pure vanilla JavaScript
-
 ---
 
 ## 🛠️ Technologies Used
