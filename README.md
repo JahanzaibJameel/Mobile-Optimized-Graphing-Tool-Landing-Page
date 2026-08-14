@@ -86,8 +86,6 @@ No installation or build process is required — simply open the HTML file in an
 ## 🖼️ Screenshots
 
 | Home Page              | 
-|  | 
-|| 
 
 ---
 
