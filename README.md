@@ -85,7 +85,7 @@ No installation or build process is required — simply open the HTML file in an
 
 ## 🖼️ Screenshots
 
-| Home Page              | Calculator                   | Grapher                   |
+| Home Page              | Calculator                   |
 | ---------------------- | ---------------------------- |  |
 | `screenshots/home.png` | `screenshots/calculator.png` | 
 
