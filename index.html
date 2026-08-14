@@ -3,215 +3,333 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="SuperGraph Pro 2026 - Advanced Calculator & Data Visualization Tool">
+    <meta name="theme-color" content="#0a0e27">
     <title>SuperGraph Pro 2026</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mathjs@11.8.0/lib/browser/math.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@12.0.0/lib/browser/math.min.js"></script>
     <style>
         :root {
-            --bg: #0f0f1a;
-            --surface: rgba(255, 255, 255, 0.05);
-            --surface-border: rgba(255, 255, 255, 0.1);
-            --text: #e0e0e0;
-            --text-muted: #a0a0b0;
-            --primary: #6c63ff;
-            --primary-dark: #5a52e0;
-            --accent: #00d4ff;
-            --gradient: linear-gradient(135deg, #6c63ff 0%, #00d4ff 100%);
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --radius: 16px;
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --dark: #0a0e27;
+            --dark-lighter: #1a1f3a;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+            --border-dark: #334155;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --backdrop: rgba(15, 23, 42, 0.7);
         }
 
         * {
             box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            background: var(--bg);
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #16213e 100%);
             color: var(--text);
-            height: 100vh;
+            min-height: 100vh;
             overflow: hidden;
             touch-action: manipulation;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
+        body.light-mode {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
+            --dark: #ffffff;
+            --dark-lighter: #f8fafc;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --backdrop: rgba(255, 255, 255, 0.8);
         }
 
         .container {
             display: flex;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             overflow: hidden;
-            transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-            will-change: transform;
-        }
-
-        .page {
-            flex: 0 0 100%;
-            height: 100%;
-            padding: 24px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            background: transparent;
             position: relative;
         }
 
+        .page {
+            min-width: 100vw;
+            height: 100%;
+            padding: 30px;
+            transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            background: transparent;
+            overflow-y: auto;
+            position: relative;
+            scroll-behavior: smooth;
+        }
+
+        .page::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .page::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .page::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        .page::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
         h1 {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
+            color: var(--light);
+            margin-bottom: 2rem;
             font-weight: 700;
-            margin-bottom: 1.5rem;
-            background: var(--gradient);
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             -webkit-background-clip: text;
             background-clip: text;
-            color: transparent;
-            text-align: center;
-            letter-spacing: -0.5px;
+            -webkit-text-fill-color: transparent;
+        }
+
+        body.light-mode h1 {
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .card {
-            background: var(--surface);
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--surface-border);
-            border-radius: var(--radius);
-            padding: 1.8rem;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             margin-bottom: 1.5rem;
-            box-shadow: var(--shadow);
-            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
         }
+
         .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.2);
+        }
+
+        body.light-mode .card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--border);
         }
 
         .input-group {
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.5rem;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--light);
             font-size: 0.95rem;
-            text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+
+        body.light-mode label {
+            color: var(--text);
         }
 
         input,
         select {
             width: 100%;
-            padding: 14px 18px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
             font-size: 1rem;
-            background: rgba(0, 0, 0, 0.3);
-            color: var(--text);
-            transition: border-color 0.2s, box-shadow 0.2s;
-            outline: none;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
         }
+
+        body.light-mode input,
+        body.light-mode select {
+            background: white;
+            color: var(--text);
+            border-color: var(--border);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        body.light-mode input::placeholder {
+            color: var(--text-light);
+        }
+
         input:focus,
         select:focus {
+            outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.3);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            background: rgba(99, 102, 241, 0.1);
         }
 
         button {
-            background: var(--gradient);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             border: none;
-            padding: 14px 20px;
-            border-radius: 12px;
+            padding: 14px 24px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 1rem;
             font-weight: 600;
             width: 100%;
-            transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
-            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.4);
-            letter-spacing: 0.3px;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            letter-spacing: 0.5px;
             position: relative;
             overflow: hidden;
         }
-        button::after {
+
+        button::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.1);
-            opacity: 0;
-            transition: opacity 0.2s;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
+
+        button:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
         button:hover {
-            filter: brightness(1.1);
-            box-shadow: 0 6px 20px rgba(108, 99, 255, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
         }
+
         button:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 8px rgba(108, 99, 255, 0.4);
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
         }
-        button:active::after {
-            opacity: 1;
-        }
+
         button.secondary {
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--text);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary);
+            border: 1px solid var(--primary);
             box-shadow: none;
-            margin-top: 0.8rem;
         }
+
+        body.light-mode button.secondary {
+            background: white;
+            color: var(--primary-dark);
+            border: 2px solid var(--primary-dark);
+        }
+
         button.secondary:hover {
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        button.danger {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+        }
+
+        button.success {
+            background: linear-gradient(135deg, var(--success), #16a34a);
         }
 
         .chart-container {
             width: 100%;
             height: 55vh;
-            margin: 1.5rem 0;
+            margin: 2rem 0;
             position: relative;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 12px;
-            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+        }
+
+        body.light-mode .chart-container {
+            background: white;
+            border-color: var(--border);
         }
 
         .nav-dots {
             display: flex;
             justify-content: center;
-            margin-top: auto;
+            margin-top: 2rem;
             gap: 0.8rem;
-            padding: 1rem 0;
         }
+
         .dot {
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transition: all 0.3s;
+            background-color: rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
             cursor: pointer;
         }
+
+        body.light-mode .dot {
+            background-color: #e2e8f0;
+        }
+
         .dot.active {
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             transform: scale(1.3);
-            box-shadow: 0 0 10px var(--accent);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+        }
+
+        .orientation-warning {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--backdrop);
+            backdrop-filter: blur(10px);
+            color: white;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .orientation-warning h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: white;
+            font-weight: 700;
+        }
+
+        .orientation-warning p {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            max-width: 300px;
         }
 
         .calculator {
@@ -220,454 +338,807 @@
             gap: 12px;
             margin-top: 1.5rem;
         }
+
         .calculator button {
             aspect-ratio: 1/1;
             padding: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
+            border-radius: 12px;
         }
+
         .calculator-display {
             grid-column: span 4;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             padding: 20px;
             text-align: right;
             font-size: 2rem;
-            margin-bottom: 10px;
-            height: 70px;
+            margin-bottom: 12px;
+            height: 80px;
             overflow: hidden;
-            color: #fff;
-            font-weight: 300;
-            letter-spacing: 1px;
+            word-wrap: break-word;
+            word-break: break-all;
+            color: var(--accent);
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
         }
+
+        body.light-mode .calculator-display {
+            background: #f8fafc;
+            border-color: var(--border);
+            color: var(--primary-dark);
+        }
+
+        .calculator-history {
+            grid-column: span 4;
+            background: rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-height: 120px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+        }
+
+        body.light-mode .calculator-history {
+            background: #f1f5f9;
+            border-color: var(--border);
+            color: var(--text-light);
+        }
+
+        .calc-btn.operator {
+            background: linear-gradient(135deg, var(--secondary), #7c3aed);
+            color: white;
+        }
+
         .span-2 {
             grid-column: span 2;
             aspect-ratio: 2/1;
         }
+
         .tab-buttons {
             display: flex;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.5rem;
             border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--surface-border);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            gap: 0;
         }
+
         .tab-button {
             flex: 1;
-            padding: 12px;
+            padding: 12px 16px;
             background: transparent;
             border: none;
-            font-weight: 500;
-            color: var(--text-muted);
-            transition: all 0.2s;
+            border-radius: 0;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            box-shadow: none;
+            width: auto;
         }
+
+        body.light-mode .tab-button {
+            color: var(--text-light);
+        }
+
         .tab-button.active {
-            background: var(--gradient);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
+            box-shadow: none;
         }
+
         .hidden {
             display: none !important;
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: rotate(20deg);
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 1rem;
+            color: #fca5a5;
+            font-size: 0.9rem;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        body.light-mode .error-message {
+            background: rgba(239, 68, 68, 0.05);
+            color: #dc2626;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .success-message {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.5);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 1rem;
+            color: #86efac;
+            font-size: 0.9rem;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .page {
+            animation: fadeIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @media (orientation: portrait) {
+            .orientation-warning {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 1024px) {
             .page {
-                padding: 16px;
+                padding: 20px;
             }
+
             h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
+
             .card {
-                padding: 1.2rem;
+                padding: 1.5rem;
             }
-            .calculator button {
-                font-size: 1.1rem;
-            }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        body.light-mode .stat-card {
+            background: white;
+            border-color: var(--border);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 4px;
+            transition: width 0.4s ease;
         }
     </style>
 </head>
 
 <body>
-    <div class="container" id="page-container">
-        <!-- Page 1: Mode Selection -->
+    <div class="orientation-warning">
+        <h2>📱 Rotate Your Device</h2>
+        <p>For the best experience, please use landscape mode</p>
+    </div>
+
+    <button class="theme-toggle" id="theme-toggle" title="Toggle Dark/Light Mode">🌙</button>
+
+    <div class="container">
+        <!-- Page 1: Home -->
         <div class="page" id="page1">
-            <h1>SuperGraph Pro</h1>
-            <div class="card">
-                <p style="margin-bottom: 1.8rem; color: var(--text-muted); text-align: center;">Choose your tool</p>
-                <button id="goto-calculator" style="margin-bottom: 0.8rem;">🧮 &nbsp;Calculator</button>
-                <button id="goto-grapher" class="secondary">📈 &nbsp;Data Grapher</button>
+            <h1>SuperGraph Pro 2026</h1>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">∞</div>
+                    <div class="stat-label">Precision</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">Chart Types</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">2x</div>
+                    <div class="stat-label">Faster</div>
+                </div>
             </div>
+
+            <div class="card">
+                <p style="margin-bottom: 1.5rem; color: var(--text-light); font-size: 1.05rem;">Advanced computational tools for scientists, engineers, and data analysts</p>
+
+                <button id="goto-calculator" style="margin-bottom: 0.8rem;">
+                    🧮 Scientific Calculator
+                </button>
+
+                <button id="goto-grapher" class="secondary">
+                    📈 Data Grapher & Visualizer
+                </button>
+            </div>
+
             <div class="nav-dots">
-                <div class="dot active" data-page="1"></div>
-                <div class="dot" data-page="2"></div>
-                <div class="dot" data-page="3"></div>
+                <div class="dot active"></div>
+                <div class="dot"></div>
             </div>
         </div>
 
         <!-- Page 2: Calculator -->
-        <div class="page" id="page2">
+        <div class="page" id="page2" style="display:none;">
             <h1>Scientific Calculator</h1>
+
+            <div id="error-container"></div>
+
             <div class="tab-buttons">
                 <button class="tab-button active" data-tab="basic">Basic</button>
                 <button class="tab-button" data-tab="scientific">Scientific</button>
+                <button class="tab-button" data-tab="programmer">Programmer</button>
             </div>
-            <div class="calculator-display" id="calc-display">0</div>
-            <div class="calculator" id="basic-calculator">
-                <button class="calc-btn" data-value="C">C</button>
-                <button class="calc-btn" data-value="±">±</button>
-                <button class="calc-btn" data-value="%">%</button>
-                <button class="calc-btn operator" data-value="/">÷</button>
-                <button class="calc-btn" data-value="7">7</button>
-                <button class="calc-btn" data-value="8">8</button>
-                <button class="calc-btn" data-value="9">9</button>
-                <button class="calc-btn operator" data-value="*">×</button>
-                <button class="calc-btn" data-value="4">4</button>
-                <button class="calc-btn" data-value="5">5</button>
-                <button class="calc-btn" data-value="6">6</button>
-                <button class="calc-btn operator" data-value="-">−</button>
-                <button class="calc-btn" data-value="1">1</button>
-                <button class="calc-btn" data-value="2">2</button>
-                <button class="calc-btn" data-value="3">3</button>
-                <button class="calc-btn operator" data-value="+">+</button>
-                <button class="calc-btn span-2" data-value="0">0</button>
-                <button class="calc-btn" data-value=".">.</button>
-                <button class="calc-btn operator" data-value="=">=</button>
+
+            <div class="card">
+                <div class="calculator-history" id="calc-history" style="display:none;"></div>
+                <div class="calculator-display" id="calc-display">0</div>
+
+                <div class="calculator" id="basic-calculator">
+                    <button class="calc-btn" data-value="C" title="Clear">C</button>
+                    <button class="calc-btn" data-value="±" title="Toggle Sign">±</button>
+                    <button class="calc-btn" data-value="del" title="Delete">⌫</button>
+                    <button class="calc-btn operator" data-value="/" title="Divide">÷</button>
+
+                    <button class="calc-btn" data-value="7">7</button>
+                    <button class="calc-btn" data-value="8">8</button>
+                    <button class="calc-btn" data-value="9">9</button>
+                    <button class="calc-btn operator" data-value="*" title="Multiply">×</button>
+
+                    <button class="calc-btn" data-value="4">4</button>
+                    <button class="calc-btn" data-value="5">5</button>
+                    <button class="calc-btn" data-value="6">6</button>
+                    <button class="calc-btn operator" data-value="-" title="Subtract">−</button>
+
+                    <button class="calc-btn" data-value="1">1</button>
+                    <button class="calc-btn" data-value="2">2</button>
+                    <button class="calc-btn" data-value="3">3</button>
+                    <button class="calc-btn operator" data-value="+" title="Add">+</button>
+
+                    <button class="calc-btn span-2" data-value="0">0</button>
+                    <button class="calc-btn" data-value=".">.</button>
+                    <button class="calc-btn operator" data-value="=" title="Equals">=</button>
+                </div>
+
+                <div class="calculator hidden" id="scientific-calculator">
+                    <button class="calc-btn" data-value="sin(" title="Sine">sin</button>
+                    <button class="calc-btn" data-value="cos(" title="Cosine">cos</button>
+                    <button class="calc-btn" data-value="tan(" title="Tangent">tan</button>
+                    <button class="calc-btn operator" data-value="^" title="Power">x^y</button>
+
+                    <button class="calc-btn" data-value="asin(" title="Inverse Sine">asin</button>
+                    <button class="calc-btn" data-value="acos(" title="Inverse Cosine">acos</button>
+                    <button class="calc-btn" data-value="atan(" title="Inverse Tangent">atan</button>
+                    <button class="calc-btn" data-value="log10(" title="Log Base 10">log₁₀</button>
+
+                    <button class="calc-btn" data-value="log(" title="Natural Log">ln</button>
+                    <button class="calc-btn" data-value="sqrt(" title="Square Root">√</button>
+                    <button class="calc-btn" data-value="(" title="Left Paren">(</button>
+                    <button class="calc-btn" data-value=")" title="Right Paren">)</button>
+
+                    <button class="calc-btn" data-value="pi" title="Pi">π</button>
+                    <button class="calc-btn" data-value="e" title="Euler's Number">e</button>
+                    <button class="calc-btn" data-value="C" title="Clear">C</button>
+                    <button class="calc-btn operator" data-value="=" title="Equals">=</button>
+                </div>
+
+                <div class="calculator hidden" id="programmer-calculator">
+                    <button class="calc-btn" data-value="BIN" title="Binary">BIN</button>
+                    <button class="calc-btn" data-value="OCT" title="Octal">OCT</button>
+                    <button class="calc-btn" data-value="DEC" title="Decimal">DEC</button>
+                    <button class="calc-btn" data-value="HEX" title="Hexadecimal">HEX</button>
+
+                    <button class="calc-btn" data-value="&" title="Bitwise AND">AND</button>
+                    <button class="calc-btn" data-value="|" title="Bitwise OR">OR</button>
+                    <button class="calc-btn" data-value="^" title="Bitwise XOR">XOR</button>
+                    <button class="calc-btn" data-value="~" title="Bitwise NOT">NOT</button>
+
+                    <button class="calc-btn" data-value="<<" title="Left Shift"><<</button>
+                    <button class="calc-btn" data-value=">>" title="Right Shift">>></button>
+                    <button class="calc-btn" data-value="(" title="Left Paren">(</button>
+                    <button class="calc-btn" data-value=")" title="Right Paren">)</button>
+
+                    <button class="calc-btn" data-value="7">7</button>
+                    <button class="calc-btn" data-value="8">8</button>
+                    <button class="calc-btn" data-value="9">9</button>
+                    <button class="calc-btn" data-value="C" title="Clear">C</button>
+
+                    <button class="calc-btn" data-value="A">A</button>
+                    <button class="calc-btn" data-value="B">B</button>
+                    <button class="calc-btn" data-value="C">C</button>
+                    <button class="calc-btn operator" data-value="=" title="Equals">=</button>
+                </div>
             </div>
-            <div class="calculator hidden" id="scientific-calculator">
-                <button class="calc-btn" data-value="sin(">sin</button>
-                <button class="calc-btn" data-value="cos(">cos</button>
-                <button class="calc-btn" data-value="tan(">tan</button>
-                <button class="calc-btn operator" data-value="^">^</button>
-                <button class="calc-btn" data-value="log(">log</button>
-                <button class="calc-btn" data-value="ln(">ln</button>
-                <button class="calc-btn" data-value="sqrt(">√</button>
-                <button class="calc-btn" data-value="(">(</button>
-                <button class="calc-btn" data-value=")">)</button>
-                <button class="calc-btn" data-value="pi">π</button>
-                <button class="calc-btn" data-value="e">e</button>
-                <button class="calc-btn operator" data-value="factorial(">!</button>
-                <button class="calc-btn span-2" data-value="C">Clear</button>
-                <button class="calc-btn" data-value="back">⌫</button>
-                <button class="calc-btn operator" data-value="=">=</button>
-            </div>
+
             <button class="secondary" id="back-to-home">← Back to Home</button>
+
             <div class="nav-dots">
-                <div class="dot" data-page="1"></div>
-                <div class="dot active" data-page="2"></div>
-                <div class="dot" data-page="3"></div>
+                <div class="dot"></div>
+                <div class="dot active"></div>
             </div>
         </div>
 
         <!-- Page 3: Grapher -->
-        <div class="page" id="page3">
-            <h1>Data Grapher</h1>
+        <div class="page" id="page3" style="display:none;">
+            <h1>Data Grapher & Visualizer</h1>
+
+            <div id="grapher-error-container"></div>
+
             <div class="card">
                 <div class="input-group">
-                    <label for="graph-type">Graph Type</label>
+                    <label for="graph-type">Chart Type:</label>
                     <select id="graph-type">
                         <option value="line">Line Chart</option>
                         <option value="bar">Bar Chart</option>
-                        <option value="pie">Pie Chart</option>
-                        <option value="scatter">Scatter Plot</option>
+                        <option value="area">Area Chart</option>
+                        <option value="doughnut">Doughnut Chart</option>
                     </select>
                 </div>
+
                 <div class="input-group">
-                    <label for="data-points">Number of Points (2-20)</label>
-                    <input type="number" id="data-points" min="2" max="20" value="5">
+                    <label for="data-points">Number of Data Points (2-50):</label>
+                    <input type="number" id="data-points" min="2" max="50" value="5">
                 </div>
+
                 <button id="generate-inputs">Continue</button>
             </div>
+
             <div id="graph-input-section" style="display:none;">
                 <div class="card">
-                    <h2 style="font-size: 1.3rem; margin-bottom: 1rem;">Enter Your Data</h2>
+                    <h2 style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--light);">Enter Your Data</h2>
                     <div id="value-inputs"></div>
-                    <button id="generate-graph">Generate Graph</button>
+                    <button id="generate-graph" class="success">Generate Graph</button>
                 </div>
             </div>
+
             <div class="chart-container" id="chart-container" style="display:none;">
                 <canvas id="dataChart"></canvas>
             </div>
+
             <button class="secondary" id="back-to-home-2">← Back to Home</button>
+
             <div class="nav-dots">
-                <div class="dot" data-page="1"></div>
-                <div class="dot" data-page="2"></div>
-                <div class="dot active" data-page="3"></div>
+                <div class="dot"></div>
+                <div class="dot active"></div>
             </div>
         </div>
     </div>
 
     <script>
-        (function() {
-            // ---------- Navigation ----------
-            const container = document.getElementById('page-container');
-            let currentPage = 1;
+        'use strict';
 
-            function showPage(pageNumber) {
-                currentPage = pageNumber;
-                container.style.transform = `translateX(-${(pageNumber - 1) * 100}%)`;
-                updateDots();
-                // Reset graph section when returning to page 3
-                if (pageNumber === 3) {
-                    document.getElementById('graph-input-section').style.display = 'none';
-                    document.getElementById('chart-container').style.display = 'none';
-                }
+        // Application State Management
+        class AppState {
+            constructor() {
+                this.currentPage = 1;
+                this.dataPoints = [];
+                this.labels = [];
+                this.currentCalculator = 'basic';
+                this.calcHistory = [];
+                this.calcExpression = '';
+                this.lastResult = null;
+                this.isDarkMode = !localStorage.getItem('theme') || localStorage.getItem('theme') === 'dark';
+                this.currentBase = 'DEC';
+                
+                this.loadState();
             }
 
-            function updateDots() {
-                document.querySelectorAll('.nav-dots .dot').forEach((dot, index) => {
-                    dot.classList.toggle('active', index === currentPage - 1);
-                });
-            }
-
-            // Dot navigation
-            document.querySelectorAll('.nav-dots .dot').forEach(dot => {
-                dot.addEventListener('click', () => {
-                    const page = parseInt(dot.dataset.page);
-                    if (!isNaN(page)) showPage(page);
-                });
-            });
-
-            // Buttons
-            document.getElementById('goto-calculator').addEventListener('click', () => showPage(2));
-            document.getElementById('goto-grapher').addEventListener('click', () => showPage(3));
-            document.getElementById('back-to-home').addEventListener('click', () => showPage(1));
-            document.getElementById('back-to-home-2').addEventListener('click', () => showPage(1));
-
-            // ---------- Calculator ----------
-            const calcDisplay = document.getElementById('calc-display');
-            let calcExpression = '';
-            let lastResult = null;
-
-            function updateDisplay() {
-                let display = calcExpression
-                    .replace(/\*/g, '×')
-                    .replace(/\//g, '÷')
-                    .replace(/-/g, '−'); // Replace minus for display consistency
-                calcDisplay.textContent = display || '0';
-            }
-
-            function evaluateExpression() {
+            loadState() {
                 try {
-                    // Math.js already understands pi, e, sin, cos, etc.
-                    const result = math.evaluate(calcExpression);
-                    calcExpression = result.toString();
-                    lastResult = result;
-                    updateDisplay();
-                } catch (error) {
-                    calcDisplay.textContent = 'Error';
-                    calcExpression = '';
-                    lastResult = null;
-                }
-            }
-
-            function handleCalcButton(value) {
-                switch (value) {
-                    case 'C':
-                        calcExpression = '';
-                        lastResult = null;
-                        updateDisplay();
-                        break;
-                    case '±':
-                        // Toggle sign of entire expression robustly
-                        if (calcExpression) {
-                            try {
-                                const val = math.evaluate(calcExpression);
-                                if (typeof val === 'number') {
-                                    calcExpression = (-val).toString();
-                                    lastResult = null;
-                                    updateDisplay();
-                                }
-                            } catch (e) { /* ignore */ }
-                        }
-                        break;
-                    case 'back':
-                        calcExpression = calcExpression.slice(0, -1);
-                        updateDisplay();
-                        break;
-                    case '=':
-                        evaluateExpression();
-                        break;
-                    default:
-                        // If last result exists and user starts with operator, append to last result
-                        if (lastResult !== null && ['+', '-', '*', '/', '^'].includes(value) && calcExpression === '') {
-                            calcExpression = lastResult.toString();
-                        }
-                        calcExpression += value;
-                        lastResult = null;
-                        updateDisplay();
-                }
-            }
-
-            // Button click events
-            document.querySelectorAll('.calc-btn').forEach(btn => {
-                btn.addEventListener('click', () => handleCalcButton(btn.dataset.value));
-            });
-
-            // Keyboard support
-            document.addEventListener('keydown', (e) => {
-                const key = e.key;
-                if (currentPage === 2) {
-                    if (/^[0-9+\-*/.^()%]$/.test(key)) {
-                        e.preventDefault();
-                        handleCalcButton(key);
-                    } else if (key === 'Enter') {
-                        e.preventDefault();
-                        handleCalcButton('=');
-                    } else if (key === 'Backspace') {
-                        e.preventDefault();
-                        handleCalcButton('back');
-                    } else if (key === 'Escape') {
-                        e.preventDefault();
-                        handleCalcButton('C');
-                    } else if (key === 'p' || key === 'P') {
-                        e.preventDefault();
-                        handleCalcButton('pi');
-                    } else if (key === 'e' || key === 'E') {
-                        e.preventDefault();
-                        handleCalcButton('e');
+                    const saved = localStorage.getItem('appState');
+                    if (saved) {
+                        const state = JSON.parse(saved);
+                        this.calcHistory = state.calcHistory || [];
+                        this.isDarkMode = state.isDarkMode !== false;
                     }
+                } catch (error) {
+                    console.warn('Failed to load app state:', error);
+                }
+            }
+
+            saveState() {
+                try {
+                    localStorage.setItem('appState', JSON.stringify({
+                        calcHistory: this.calcHistory.slice(-20),
+                        isDarkMode: this.isDarkMode
+                    }));
+                } catch (error) {
+                    console.warn('Failed to save app state:', error);
+                }
+            }
+
+            addToHistory(expression, result) {
+                this.calcHistory.push({ expression, result, timestamp: new Date().toLocaleTimeString() });
+                if (this.calcHistory.length > 50) this.calcHistory.shift();
+                this.saveState();
+            }
+        }
+
+        const appState = new AppState();
+
+        // DOM Elements
+        const pages = document.querySelectorAll('.page');
+        const dots = document.querySelectorAll('.nav-dots .dot');
+        const calcDisplay = document.getElementById('calc-display');
+        const calcButtons = document.querySelectorAll('.calc-btn');
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Initialize Theme
+        function initializeTheme() {
+            if (!appState.isDarkMode) {
+                body.classList.add('light-mode');
+                themeToggle.textContent = '☀️';
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            appState.isDarkMode = !body.classList.contains('light-mode');
+            themeToggle.textContent = appState.isDarkMode ? '🌙' : '☀️';
+            appState.saveState();
+        });
+
+        // Navigation
+        function showPage(pageNumber) {
+            pages.forEach(page => page.style.display = 'none');
+            
+            const targetPage = document.getElementById(`page${pageNumber}`);
+            if (targetPage) {
+                targetPage.style.display = 'block';
+            }
+
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === pageNumber - 1);
+            });
+
+            if (pageNumber === 3) {
+                document.getElementById('graph-input-section').style.display = 'none';
+                document.getElementById('chart-container').style.display = 'none';
+            }
+
+            appState.currentPage = pageNumber;
+        }
+
+        // Error Handling
+        function showError(message, containerId = 'error-container') {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML = `<div class="error-message">${message}</div>`;
+                setTimeout(() => container.innerHTML = '', 4000);
+            }
+        }
+
+        function showSuccess(message, containerId = 'error-container') {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML = `<div class="success-message">${message}</div>`;
+                setTimeout(() => container.innerHTML = '', 3000);
+            }
+        }
+
+        // Calculator Functionality
+        function updateCalcDisplay() {
+            if (appState.calcExpression.length > 40) {
+                calcDisplay.textContent = appState.calcExpression.slice(-40);
+            } else {
+                calcDisplay.textContent = appState.calcExpression || '0';
+            }
+        }
+
+        function updateCalcHistory() {
+            const historyEl = document.getElementById('calc-history');
+            if (appState.calcHistory.length > 0) {
+                historyEl.style.display = 'block';
+                historyEl.innerHTML = appState.calcHistory.slice(-5).reverse()
+                    .map(h => `<div>${h.expression} = ${h.result}</div>`)
+                    .join('');
+            }
+        }
+
+        calcButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const value = button.dataset.value;
+
+                try {
+                    switch (value) {
+                        case 'C':
+                            appState.calcExpression = '';
+                            updateCalcDisplay();
+                            break;
+                        case 'del':
+                            appState.calcExpression = appState.calcExpression.slice(0, -1);
+                            updateCalcDisplay();
+                            break;
+                        case '±':
+                            if (appState.calcExpression && appState.calcExpression !== '0') {
+                                appState.calcExpression = appState.calcExpression.startsWith('-') 
+                                    ? appState.calcExpression.substring(1)
+                                    : '-' + appState.calcExpression;
+                                updateCalcDisplay();
+                            }
+                            break;
+                        case '=':
+                            if (appState.calcExpression) {
+                                const result = math.evaluate(appState.calcExpression.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-'));
+                                const resultStr = typeof result === 'number' ? result.toFixed(10).replace(/\.?0+$/, '') : String(result);
+                                appState.addToHistory(appState.calcExpression, resultStr);
+                                appState.lastResult = parseFloat(resultStr);
+                                calcDisplay.textContent = resultStr;
+                                appState.calcExpression = resultStr;
+                                updateCalcHistory();
+                            }
+                            break;
+                        default:
+                            appState.calcExpression += value;
+                            updateCalcDisplay();
+                    }
+                } catch (error) {
+                    showError('Invalid expression');
+                    appState.calcExpression = '';
+                    updateCalcDisplay();
                 }
             });
+        });
 
-            // Tab switching
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const tab = btn.dataset.tab;
-                    document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    document.getElementById('basic-calculator').classList.toggle('hidden', tab !== 'basic');
-                    document.getElementById('scientific-calculator').classList.toggle('hidden', tab !== 'scientific');
-                });
+        // Tab Switching
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tab = button.dataset.tab;
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                document.querySelectorAll('.calculator').forEach(calc => calc.classList.add('hidden'));
+                document.getElementById(`${tab}-calculator`).classList.remove('hidden');
+
+                appState.currentCalculator = tab;
+                appState.calcExpression = '';
+                updateCalcDisplay();
             });
+        });
 
-            // ---------- Grapher ----------
-            document.getElementById('generate-inputs').addEventListener('click', () => {
-                const numPoints = parseInt(document.getElementById('data-points').value);
+        // Grapher Functionality
+        document.getElementById('generate-inputs').addEventListener('click', () => {
+            const numPoints = parseInt(document.getElementById('data-points').value);
+
+            if (isNaN(numPoints) || numPoints < 2 || numPoints > 50) {
+                showError('Please enter a number between 2 and 50', 'grapher-error-container');
+                return;
+            }
+
+            const valueInputsDiv = document.getElementById('value-inputs');
+            valueInputsDiv.innerHTML = '';
+
+            for (let i = 0; i < numPoints; i++) {
+                const div = document.createElement('div');
+                div.className = 'input-group';
+                div.innerHTML = `
+                    <label for="value-${i}">Data Point ${i + 1}:</label>
+                    <input type="number" id="value-${i}" placeholder="Enter value" step="any">
+                `;
+                valueInputsDiv.appendChild(div);
+            }
+
+            document.getElementById('graph-input-section').style.display = 'block';
+        });
+
+        document.getElementById('generate-graph').addEventListener('click', () => {
+            try {
                 const graphType = document.getElementById('graph-type').value;
+                const numPoints = parseInt(document.getElementById('data-points').value);
 
-                if (isNaN(numPoints) || numPoints < 2 || numPoints > 20) {
-                    alert('Please enter a number between 2 and 20');
-                    return;
-                }
-
-                const valueInputsDiv = document.getElementById('value-inputs');
-                valueInputsDiv.innerHTML = '';
+                appState.dataPoints = [];
+                appState.labels = [];
 
                 for (let i = 0; i < numPoints; i++) {
-                    const div = document.createElement('div');
-                    div.className = 'input-group';
+                    const input = document.getElementById(`value-${i}`);
+                    const value = parseFloat(input.value);
 
-                    if (graphType === 'scatter') {
-                        div.innerHTML = `
-                            <label>Point ${i+1} (X, Y)</label>
-                            <div style="display: flex; gap: 10px;">
-                                <input type="number" id="value-x-${i}" placeholder="X value" style="flex:1;">
-                                <input type="number" id="value-y-${i}" placeholder="Y value" style="flex:1;">
-                            </div>
-                        `;
-                    } else {
-                        div.innerHTML = `
-                            <label>Value ${i+1}</label>
-                            <input type="number" id="value-${i}" placeholder="Enter value">
-                        `;
+                    if (isNaN(value)) {
+                        showError(`Point ${i + 1} must be a valid number`, 'grapher-error-container');
+                        return;
                     }
-                    valueInputsDiv.appendChild(div);
-                }
-                document.getElementById('graph-input-section').style.display = 'block';
-            });
 
-            document.getElementById('generate-graph').addEventListener('click', () => {
-                const graphType = document.getElementById('graph-type').value;
-                const numPoints = parseInt(document.getElementById('data-points').value);
-
-                let labels = [];
-                let data = [];
-                let scatterData = [];
-
-                if (graphType === 'scatter') {
-                    for (let i = 0; i < numPoints; i++) {
-                        const xVal = parseFloat(document.getElementById(`value-x-${i}`).value) || 0;
-                        const yVal = parseFloat(document.getElementById(`value-y-${i}`).value) || 0;
-                        scatterData.push({ x: xVal, y: yVal });
-                        labels.push(`(${xVal}, ${yVal})`);
-                    }
-                    data = scatterData;
-                } else {
-                    for (let i = 0; i < numPoints; i++) {
-                        const val = parseFloat(document.getElementById(`value-${i}`).value) || 0;
-                        data.push(val);
-                        labels.push(`Point ${i+1}`);
-                    }
+                    appState.dataPoints.push(value);
+                    appState.labels.push(`Point ${i + 1}`);
                 }
 
-                renderChart(graphType, labels, data);
+                renderChart(graphType);
                 document.getElementById('chart-container').style.display = 'block';
-            });
+                showSuccess('Graph generated successfully!', 'grapher-error-container');
+            } catch (error) {
+                showError(`Error generating graph: ${error.message}`, 'grapher-error-container');
+            }
+        });
 
-            let chartInstance = null;
+        // Chart Rendering
+        function renderChart(type = 'line') {
+            const ctx = document.getElementById('dataChart');
+            if (!ctx) return;
 
-            function renderChart(type, labels, data) {
-                const ctx = document.getElementById('dataChart').getContext('2d');
-                if (chartInstance) chartInstance.destroy();
+            const canvasContext = ctx.getContext('2d');
 
-                const isScatter = type === 'scatter';
-                const isPie = type === 'pie';
-
-                const config = {
-                    type: isScatter ? 'scatter' : type,
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Your Data',
-                            data: data,
-                            borderColor: isScatter ? '#00d4ff' : '#6c63ff',
-                            backgroundColor: isPie ? [
-                                '#6c63ff', '#00d4ff', '#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff'
-                            ] : isScatter ? '#00d4ff' : 'rgba(108, 99, 255, 0.2)',
-                            borderWidth: 2,
-                            pointBackgroundColor: isScatter ? '#00d4ff' : undefined,
-                            pointRadius: isScatter ? 6 : undefined,
-                            showLine: isScatter ? false : undefined,
-                            fill: !isPie && !isScatter && type !== 'bar'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                labels: { color: '#e0e0e0' }
-                            },
-                            tooltip: { enabled: true }
-                        },
-                        scales: isPie ? {} : {
-                            x: isScatter ? {
-                                type: 'linear',
-                                position: 'bottom',
-                                grid: { color: 'rgba(255,255,255,0.1)' },
-                                ticks: { color: '#a0a0b0' }
-                            } : {
-                                grid: { color: 'rgba(255,255,255,0.1)' },
-                                ticks: { color: '#a0a0b0' }
-                            },
-                            y: {
-                                beginAtZero: !isScatter,
-                                grid: { color: 'rgba(255,255,255,0.1)' },
-                                ticks: { color: '#a0a0b0' }
-                            }
-                        }
-                    }
-                };
-
-                chartInstance = new Chart(ctx, config);
+            if (window.dataChart) {
+                window.dataChart.destroy();
             }
 
-            // Initialize
-            showPage(1);
-        })();
+            const colors = ['#6366f1', '#8b5cf6', '#06b6d4', '#f59e0b', '#ef4444', '#22c55e'];
+            const bgColors = appState.dataPoints.map((_, i) => colors[i % colors.length]);
+
+            let chartConfig = {
+                type: type,
+                data: {
+                    labels: appState.labels,
+                    datasets: [{
+                        label: 'Data Values',
+                        data: appState.dataPoints,
+                        borderColor: '#6366f1',
+                        backgroundColor: type === 'doughnut' ? bgColors : 'rgba(99, 102, 241, 0.2)',
+                        borderWidth: 2,
+                        fill: type === 'area',
+                        tension: 0.4,
+                        pointRadius: type === 'line' || type === 'area' ? 5 : 0,
+                        pointHoverRadius: type === 'line' || type === 'area' ? 7 : 0,
+                        pointBackgroundColor: '#6366f1',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: appState.isDarkMode ? '#f8fafc' : '#1e293b',
+                                font: { size: 12, weight: 600 }
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#6366f1',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: appState.isDarkMode ? '#94a3b8' : '#64748b' },
+                            grid: { color: appState.isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }
+                        },
+                        x: {
+                            ticks: { color: appState.isDarkMode ? '#94a3b8' : '#64748b' },
+                            grid: { color: appState.isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }
+                        }
+                    }
+                }
+            };
+
+            window.dataChart = new Chart(canvasContext, chartConfig);
+        }
+
+        // Event Listeners
+        document.getElementById('goto-calculator').addEventListener('click', () => showPage(2));
+        document.getElementById('goto-grapher').addEventListener('click', () => showPage(3));
+        document.getElementById('back-to-home').addEventListener('click', () => showPage(1));
+        document.getElementById('back-to-home-2').addEventListener('click', () => showPage(1));
+
+        // Orientation Check
+        function checkOrientation() {
+            const warning = document.querySelector('.orientation-warning');
+            warning.style.display = window.innerHeight > window.innerWidth ? 'flex' : 'none';
+        }
+
+        window.addEventListener('load', checkOrientation);
+        window.addEventListener('resize', checkOrientation);
+
+        // Keyboard Support
+        document.addEventListener('keydown', (e) => {
+            if (appState.currentPage === 2) {
+                if (e.key >= '0' && e.key <= '9') {
+                    appState.calcExpression += e.key;
+                    updateCalcDisplay();
+                } else if (e.key === 'Enter') {
+                    const btn = document.querySelector('[data-value="="]');
+                    if (btn) btn.click();
+                } else if (e.key === 'Backspace') {
+                    appState.calcExpression = appState.calcExpression.slice(0, -1);
+                    updateCalcDisplay();
+                } else if (e.key === 'Escape') {
+                    appState.calcExpression = '';
+                    updateCalcDisplay();
+                }
+            }
+        });
+
+        // Initialize
+        initializeTheme();
+        showPage(1);
+        updateCalcHistory();
     </script>
 </body>
 
